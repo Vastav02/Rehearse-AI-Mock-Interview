@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rehearse AI – Web-Powered Mock Interviews</title>
+  <meta name="description" content="AI mock interviews built from your PDF resume and target job description with real-time web research.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <main>
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+      <a href="#" class="brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+            <line x1="12" y1="19" x2="12" y2="22" />
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">Rehearse AI</div>
+        </div>
+      </a>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div class="brand-badge"><i></i> Live Web Research Active</div>
+        <button type="button" class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Theme">
+          <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ==================== 1. SETUP SECTION ==================== -->
+    <section id="setup">
+      <div class="hero-header">
+        <div class="hero-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+          </svg>
+          AI Interview Simulator
+        </div>
+        <h1 class="hero-title">Practice the interview you're <span>actually going to have.</span></h1>
+        <p class="hero-subtitle">Upload your PDF resume and target job description. Rehearse researches live company interview reports, tech stacks, and conducts a tailored interview.</p>
+      </div>
+
+      <div class="panel-glass">
+        <div class="setup-grid">
+          <!-- PDF Resume Dropzone -->
+          <div class="form-group">
+            <div class="form-label">
+              <span>Upload Resume (PDF)<span class="req">*</span></span>
+              <span class="form-sublabel">PDF format only</span>
+            </div>
+
+            <!-- Dropzone UI -->
+            <div class="pdf-dropzone" id="pdfDropzone">
+              <input type="file" id="resumeFile" accept=".pdf,application/pdf">
+              <div class="dz-icon-wrap">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="12" y1="18" x2="12" y2="12" />
+                  <polyline points="9 15 12 12 15 15" />
+                </svg>
+              </div>
+              <div class="dz-title">Drag & drop your PDF resume</div>
+              <div class="dz-hint">or click to browse files from your computer</div>
+              <div class="dz-badge">PDF File Required</div>
+            </div>
+
+            <!-- Selected PDF State -->
+            <div class="pdf-selected-card" id="pdfSelectedCard">
+              <div class="pdf-icon-box">PDF</div>
+              <div class="pdf-info">
+                <div class="pdf-name" id="pdfFileName">my-resume.pdf</div>
+                <div class="pdf-meta">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span id="pdfFileSize">1.2 MB</span> • Ready for extraction
+                </div>
+              </div>
+              <button type="button" class="pdf-remove-btn" id="pdfRemoveBtn">Replace</button>
+            </div>
+          </div>
+
+          <!-- Job Description Input -->
+          <div class="form-group">
+            <div class="form-label">
+              <span>Target Job Description<span class="req">*</span></span>
+              <span class="form-sublabel">Paste full posting</span>
+            </div>
+            <textarea class="glass-input" id="jd" placeholder="Paste the job requirements, responsibilities, and qualifications here..."></textarea>
+          </div>
+        </div>
+
+        <!-- Metadata Row -->
+        <div class="meta-row">
+          <div class="form-group">
+            <label class="form-label" for="company">Company Name</label>
+            <input type="text" class="glass-input" id="company" placeholder="e.g. Google, Flipkart, Stripe">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="role">Target Role</label>
+            <input type="text" class="glass-input" id="role" placeholder="e.g. Senior Frontend Engineer">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Questions</label>
+            <div class="count-pills" id="countPills">
+              <button type="button" class="count-pill" data-val="3">3</button>
+              <button type="button" class="count-pill active" data-val="5">5</button>
+              <button type="button" class="count-pill" data-val="8">8</button>
+              <button type="button" class="count-pill" data-val="10">10</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 32px;">
+          <button class="btn-primary" id="startBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+            Start AI Mock Interview
+          </button>
+        </div>
+
+        <!-- Loading Modal -->
+        <div class="loader-box hidden" id="setupLoading">
+          <div class="loader-title">Building interview...</div>
+        </div>
+
+        <div class="alert-error hidden" id="setupError" role="alert">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <span id="setupErrorMsg"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 2. INTERVIEW SECTION ==================== -->
+    <section id="interview" class="hidden">
+      <div class="interview-layout">
+        <!-- Main Question Panel -->
+        <div class="panel-glass">
+          <div class="progress-bar-container">
+            <div class="progress-fill" id="bar" style="width: 20%;"></div>
+          </div>
+
+          <div class="meta-badges">
+            <span class="q-counter" id="counter">Question 1 of 5</span>
+            <span id="tag"></span>
+          </div>
+
+          <h2 class="question-heading" id="question"></h2>
+          <div class="why-box" id="why"></div>
+
+          <!-- Answer Input Box -->
+          <div id="answerBox">
+            <div class="form-label" style="margin-bottom: 8px;">Your Answer</div>
+            <textarea class="glass-input" id="answer" style="min-height: 160px;" placeholder="Answer as you would in an interview room. Click 'Answer by voice' to speak or type your response..."></textarea>
+
+            <div class="voice-controls">
+              <button class="btn-primary" id="submitBtn" style="width: auto; padding: 12px 24px;">Submit Answer</button>
+              <button class="btn-secondary" id="micBtn" type="button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                  <line x1="12" y1="19" x2="12" y2="22" />
+                </svg>
+                <span>Answer by voice</span>
+              </button>
+              <button class="btn-secondary" id="skipBtn" type="button">Skip</button>
+            </div>
+          </div>
+
+          <!-- Score Loading State -->
+          <div class="loader-box hidden" id="scoreLoading">
+            <div class="spinner-orb" style="width: 54px; height: 54px;">
+              <svg viewBox="0 0 24 24" style="width: 24px; height: 24px;">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+            </div>
+            <div class="loader-title" style="font-size: 16px;">Evaluating Your Answer...</div>
+          </div>
+
+          <div class="alert-error hidden" id="interviewError"></div>
+
+          <!-- Feedback Box -->
+          <div class="feedback-section hidden" id="feedback"></div>
+          <div style="margin-top: 24px;" class="hidden" id="nextRow">
+            <button class="btn-primary" id="nextBtn">Next Question →</button>
+          </div>
+        </div>
+
+        <!-- Right Sidebar: Candidate Info & Sources -->
+        <aside class="sidebar-box">
+          <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            Candidate Summary
+          </h3>
+          <p id="summary">Loading candidate profile...</p>
+
+          <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+            Web Research Sources
+          </h3>
+          <ul class="sources-list" id="sources"></ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ==================== 3. REPORT SECTION ==================== -->
+    <section id="report" class="hidden">
+      <div class="panel-glass">
+        <div class="loader-box" id="reportLoading">
+          <div class="spinner-orb">
+            <svg viewBox="0 0 24 24">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+          </div>
+          <div class="loader-title">Compiling Final Interview Performance Report</div>
+        </div>
+
+        <div id="reportBody" class="hidden"></div>
+        <div class="alert-error hidden" id="reportError"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modular Scripts -->
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
